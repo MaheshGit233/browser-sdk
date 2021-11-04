@@ -108,6 +108,9 @@ function processViewUpdate(
             lcp: {
               support: supportPerformanceTimingEvent('largest-contentful-paint'),
               discard_reason: view.timings.lcpDiscardReason,
+              last_collect_time: view.timings.lcpLastCollectTime,
+              start_collect_time: view.timings.lcpStartCollectTime,
+              count: view.timings.lcpCount,
             },
           }
         : undefined,
