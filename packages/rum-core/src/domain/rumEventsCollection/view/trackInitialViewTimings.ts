@@ -24,10 +24,13 @@ export interface Timings {
   firstInputDelay?: Duration
   firstInputTime?: Duration
   lcpDiscardReason?: string
+  lcpStartCollectTime?: number
+  lcpLastCollectTime?: number
+  lcpCount?: number
 }
 
 export function trackInitialViewTimings(lifeCycle: LifeCycle, callback: (timings: Timings) => void) {
-  let timings: Timings | undefined
+  let timings: Timings = { lcpStartCollectTime: performance.now(), lcpCount: 0 }
   function setTimings(newTimings: Partial<Timings>) {
     timings = { ...timings, ...newTimings }
     callback(timings)
@@ -37,12 +40,15 @@ export function trackInitialViewTimings(lifeCycle: LifeCycle, callback: (timings
   const { stop: stopFCPTracking } = trackFirstContentfulPaintTiming(lifeCycle, (firstContentfulPaint) =>
     setTimings({ firstContentfulPaint })
   )
+  let lcpCount = 0
   const { stop: stopLCPTracking } = trackLargestContentfulPaintTiming(
     lifeCycle,
     window,
     (largestContentfulPaint) => {
       setTimings({
         largestContentfulPaint,
+        lcpLastCollectTime: performance.now(),
+        lcpCount: ++lcpCount,
       })
     },
     (lcpDiscardReason) => {

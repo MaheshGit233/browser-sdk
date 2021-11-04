@@ -74,6 +74,8 @@ describe('trackTimings', () => {
       firstInputDelay: 100 as Duration,
       firstInputTime: 1000 as Duration,
       loadEvent: 567 as Duration,
+      lcpStartCollectTime: jasmine.any(Number),
+      lcpCount: 0,
     })
   })
 })

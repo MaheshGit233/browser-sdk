@@ -142,6 +142,8 @@ describe('initial view', () => {
         domContentLoaded: 345 as Duration,
         domInteractive: 234 as Duration,
         loadEvent: 567 as Duration,
+        lcpStartCollectTime: 0,
+        lcpCount: 0,
       })
     })
 
@@ -167,6 +169,9 @@ describe('initial view', () => {
         firstContentfulPaint: 123 as Duration,
         largestContentfulPaint: 789 as Duration,
         loadEvent: 567 as Duration,
+        lcpCount: 1,
+        lcpStartCollectTime: jasmine.any(Number),
+        lcpLastCollectTime: jasmine.any(Number),
       })
       expect(getViewUpdate(2).timings).toEqual({})
     })
@@ -221,6 +226,9 @@ describe('initial view', () => {
           firstContentfulPaint: 123 as Duration,
           largestContentfulPaint: 789 as Duration,
           loadEvent: 567 as Duration,
+          lcpStartCollectTime: 0,
+          lcpCount: 1,
+          lcpLastCollectTime: 200,
         })
       })
 
