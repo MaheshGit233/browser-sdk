@@ -1,4 +1,11 @@
-import { HttpRequest, objectEntries, EndpointBuilder, isNumber, addMonitoringMessage } from '@datadog/browser-core'
+import {
+  HttpRequest,
+  objectEntries,
+  EndpointBuilder,
+  isNumber,
+  addMonitoringMessage,
+  Context,
+} from '@datadog/browser-core'
 import { SegmentMeta } from '../types'
 
 export const SEND_BEACON_BYTE_LENGTH_LIMIT = 60_000
@@ -11,11 +18,11 @@ export function send(
   flushReason?: string
 ): void {
   if (!isNumber(meta.start)) {
-    addMonitoringMessage(`invalid segment start value`, {
+    addMonitoringMessage('invalid segment start value', {
       debug: {
         start: meta.start,
         flushReason,
-        meta,
+        meta: (meta as unknown) as Context,
       },
     })
   }
