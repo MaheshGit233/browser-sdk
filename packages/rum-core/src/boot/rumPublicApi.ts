@@ -28,7 +28,7 @@ import { RumSession } from '../domain/rumSession'
 import { RumEventDomainContext } from '../domainContext.types'
 import { CommonContext, User, ActionType, ReplayStats } from '../rawRumEvent.types'
 import { RumEvent } from '../rumEvent.types'
-import { willSyntheticsInjectRum } from '../tools/syntheticsContext'
+import { willSyntheticsInjectRum } from '../domain/syntheticsContext'
 import { buildEnv } from './buildEnv'
 import { startRum } from './startRum'
 
@@ -98,13 +98,17 @@ export function makeRumPublicApi<C extends RumInitConfiguration>(startRumImpl: S
   }
 
   function initRum(initConfiguration: C) {
+    if (willSyntheticsInjectRum()) {
+      return
+    }
+
     if (canUseEventBridge()) {
       initConfiguration = overrideInitConfigurationForBridge(initConfiguration)
     } else if (!canHandleSession(initConfiguration)) {
       return
     }
 
-    if (willSyntheticsInjectRum() || !isValidInitConfiguration(initConfiguration)) {
+    if (!isValidInitConfiguration(initConfiguration)) {
       return
     }
 
