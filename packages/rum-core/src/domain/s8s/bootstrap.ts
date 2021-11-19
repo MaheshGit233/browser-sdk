@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // eslint-disable-next-line local-rules/disallow-side-effects
-import { runOnReadyState } from '@datadog/browser-core/src'
+import { runOnReadyState } from '@datadog/browser-core'
 import { RumSession } from '../rumSession'
 import type { BrowserTest, BrowserWindow, TestResults } from './s8s'
 import { buildResults } from './results'
