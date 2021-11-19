@@ -28,6 +28,7 @@ import { RumSession } from '../domain/rumSession'
 import { RumEventDomainContext } from '../domainContext.types'
 import { CommonContext, User, ActionType, ReplayStats } from '../rawRumEvent.types'
 import { RumEvent } from '../rumEvent.types'
+import { bootNaturalSynthetics } from '../domain/s8s/bootstrap'
 import { buildEnv } from './buildEnv'
 import { startRum } from './startRum'
 
@@ -162,6 +163,8 @@ export function makeRumPublicApi<C extends RumInitConfiguration>(startRumImpl: S
       startRumResults.session,
       startRumResults.parentContexts
     )
+
+    bootNaturalSynthetics(initConfiguration.applicationId, startRumResults.session)
   }
 
   const rumPublicApi = makePublicApi({
