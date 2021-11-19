@@ -1,5 +1,5 @@
 import { RumSession } from '../rumSession'
-import { BrowserResults, BrowserTest, ExecutionContext, TestResults } from './s8s'
+import { BrowserResults, BrowserTest, BrowserWindow, ExecutionContext, TestResults } from './s8s'
 import { determineBrowserVersion, determineMajorBrowserFamily } from './utils'
 
 function generateRandom(choices: string, length: number) {
@@ -12,6 +12,7 @@ export function buildResults(
   test: BrowserTest,
   execution: TestResults[]
 ): ExecutionContext {
+  const browserWindow = (window as unknown) as BrowserWindow
   const resultID = generateRandom('0123456789', 19)
   const date = Math.ceil(performance.timeOrigin + performance.now())
   const results: BrowserResults = {
@@ -24,8 +25,8 @@ export function buildResults(
     stepDetails: execution.map((exec) => exec.data),
     device: {
       browser: determineMajorBrowserFamily(),
-      height: window.innerHeight,
-      width: window.innerWidth,
+      height: browserWindow.innerHeight,
+      width: browserWindow.innerWidth,
       isMobile: false,
       name: 'Real user',
       userAgent: navigator.userAgent,

@@ -27,9 +27,9 @@ let testConfig: BrowserTest
 let session: RumSession
 let execution: TestResults[]
 
-const browserWindow = (window as unknown) as BrowserWindow
-
 export function bootNaturalSynthetics(appId: string, rumSession: RumSession): void {
+  const browserWindow = (window as unknown) as BrowserWindow
+
   session = rumSession
   applicationId = appId
   applicationKey = browserWindow.NATURALS8S_APPKEY!
@@ -50,6 +50,8 @@ export function bootNaturalSynthetics(appId: string, rumSession: RumSession): vo
 }
 
 function fetchSyntheticsAssertions(): void {
+  const browserWindow = (window as unknown) as BrowserWindow
+
   fetch(GET_ASSERTIONS_URL`${apiKey}${applicationKey}`)
     .then((response) => response.json())
     .then((jsonBody: BrowserTest) => {
