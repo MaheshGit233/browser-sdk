@@ -12,8 +12,8 @@ export enum LoggerTrackingType {
   TRACKED = '1',
 }
 
-export function startLoggerSession(configuration: Configuration, areCookieAuthorized: boolean): LoggerSession {
-  if (!areCookieAuthorized) {
+export function startLoggerSession(configuration: Configuration, canUseCookies: boolean): LoggerSession {
+  if (!canUseCookies) {
     const isTracked = computeTrackingType(configuration) === LoggerTrackingType.TRACKED
     return {
       getId: () => undefined,
