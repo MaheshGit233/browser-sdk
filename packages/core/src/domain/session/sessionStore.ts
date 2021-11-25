@@ -6,7 +6,7 @@ import { monitor } from '../internalMonitoring'
 export interface SessionStore {
   expandOrRenewSession: () => void
   expandSession: () => void
-  retrieveSession: () => SessionState
+  getSession: () => SessionState
   renewObservable: Observable<void>
   stop: () => void
 }
@@ -46,7 +46,7 @@ export function startSessionStore<TrackingType extends string>(
       // save changes and expand session duration
       persistSession(cookieSession, options)
 
-      if (isTracked && sessionCacheOutdated(cookieSession)) {
+      if (isTracked && isSessionCacheOutdated(cookieSession)) {
         sessionCache = { ...cookieSession }
         renewObservable.notify()
       }
@@ -57,21 +57,21 @@ export function startSessionStore<TrackingType extends string>(
 
   const cookieWatch = setInterval(() => {
     const cookieSession = retrieveActiveSession(options)
-    if (sessionCacheOutdated(cookieSession)) {
+    if (isSessionCacheOutdated(cookieSession)) {
       clearSessionCache()
     }
   }, COOKIE_ACCESS_DELAY)
 
   function expandSession() {
     const cookieSession = retrieveActiveSession(options)
-    if (sessionCacheOutdated(cookieSession)) {
+    if (isSessionCacheOutdated(cookieSession)) {
       clearSessionCache()
     } else {
       persistSession(cookieSession, options)
     }
   }
 
-  function sessionCacheOutdated(cookieSession: SessionState) {
+  function isSessionCacheOutdated(cookieSession: SessionState) {
     return sessionCache.id !== cookieSession.id
   }
 
@@ -79,14 +79,10 @@ export function startSessionStore<TrackingType extends string>(
     sessionCache = {}
   }
 
-  function retrieveSession() {
-    return sessionCache
-  }
-
   return {
     expandOrRenewSession,
     expandSession,
-    retrieveSession,
+    getSession: () => sessionCache,
     renewObservable,
     stop: () => {
       clearInterval(cookieWatch)

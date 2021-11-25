@@ -13,6 +13,8 @@ export interface Session<T> {
   getTrackingType: () => T | undefined
 }
 
+let stopCallbacks: Array<() => void> = []
+
 export function startSessionManagement<TrackingType extends string>(
   options: CookieOptions,
   productKey: string,
@@ -27,8 +29,8 @@ export function startSessionManagement<TrackingType extends string>(
   trackVisibility(() => sessionStore.expandSession())
 
   return {
-    getId: () => sessionStore.retrieveSession().id,
-    getTrackingType: () => sessionStore.retrieveSession()[productKey] as TrackingType | undefined,
+    getId: () => sessionStore.getSession().id,
+    getTrackingType: () => sessionStore.getSession()[productKey] as TrackingType | undefined,
     renewObservable: sessionStore.renewObservable,
   }
 }
@@ -37,8 +39,6 @@ export function stopSessionManagement() {
   stopCallbacks.forEach((e) => e())
   stopCallbacks = []
 }
-
-let stopCallbacks: Array<() => void> = []
 
 function trackActivity(expandOrRenewSession: () => void) {
   const { stop } = utils.addEventListeners(
